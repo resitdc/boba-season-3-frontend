@@ -87,6 +87,7 @@
 
     const addOrder = (id, name, price) => {
       const tableMenu = document.querySelector("#table-menu-order tbody")
+      const checkInOrder = orderMenu.find((menu) => menu.id === id)
       const menuTambahan = {
         id: id,
         name: name,
@@ -94,7 +95,20 @@
         price: price
       };
 
-      orderMenu.push(menuTambahan)
+      if (checkInOrder) {
+        let updatedMenu = {
+          ...menuTambahan,
+          quantity: checkInOrder.quantity + 1,
+          price: price * (checkInOrder.quantity + 1)
+        }
+
+        let newMenu = orderMenu.filter((menu) => menu.id != id)
+        newMenu.push(updatedMenu)
+
+        orderMenu = newMenu
+      } else {
+        orderMenu.push(menuTambahan)
+      }
       subTotal += price
       
       tableMenu.innerHTML = orderMenu.map((menu) => `
