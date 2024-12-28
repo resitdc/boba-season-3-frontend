@@ -7,7 +7,19 @@
   <script src="axios.min.js"></script>
   <title>BACOD COFESHOP</title>
   <style>
-  </style>
+    input.quantity {
+      width: 40px;
+    }
+
+    #table-menu-order {
+      width: 100%;
+      text-align: left;
+    }
+    #table-menu-order tr th:last-child, #table-menu-order tr td:last-child {
+      text-align: right;
+      min-width: 60px;
+    }
+    </style>
 </head>
 <body id="bacod-framework">
   <div class="main-menu">
@@ -22,15 +34,27 @@
     <div class="menu-container">
       <h2>Order Details</h2>
       <form action="" id="form-order">
-        <input type="text" class="mb-1" placeholder="Cashier Name" value="Restu" readonly>
-        <input type="text" class="mb-1" placeholder="Buyer Name">
+        <input type="text" class="mb-1" placeholder="Cashier Name" name="cashier" value="Restu" readonly>
+        <input type="text" class="mb-1" placeholder="Buyer Name" name="buyer">
         <div class="form-body">
+          <table id="table-menu-order">
+            <thead>
+              <tr>
+                <th>Menu</th>
+                <th>Quantity</th>
+                <th>Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+            </tbody>
+          </table>
         </div>
         <div class="form-footer">
           <table class="table-transactions">
             <tr>
               <td>Sub Total</td>
-              <td>Rp. 20.000</td>
+              <td>Rp. 0</td>
             </tr>
             <tr>
               <td>Tax</td>
@@ -41,11 +65,11 @@
                 <b>Total</b>
               </td>
               <td class="final-price">
-                <b>Rp 22.000</b>
+                <b>Rp 0</b>
               </td>
             </tr>
           </table>
-          <button type="submit" id="order-button">
+          <button type="button" id="order-button" onclick="kirimKeBackend()">
             ORDER
           </button>
         </div>
@@ -53,6 +77,67 @@
     </div>
   </div>
   <script>
+    let orderMenu = []
+    const ppn = 0.1
+    let subTotal = 0
+    let total = 0
+    const subTotalDOM = document.querySelector(".table-transactions tr:nth-child(1) td:last-child")
+    const taxDOM = document.querySelector(".table-transactions tr:nth-child(2) td:last-child")
+    const finalPriceDOM = document.querySelector(".table-transactions tr:nth-child(3) td:last-child b")
+
+    const addOrder = (id, name, price) => {
+      const tableMenu = document.querySelector("#table-menu-order tbody")
+      const menuTambahan = {
+        id: id,
+        name: name,
+        quantity: 1,
+        price: price
+      };
+
+      orderMenu.push(menuTambahan)
+      subTotal += price
+      
+      tableMenu.innerHTML = orderMenu.map((menu) => `
+        <tr>
+          <td>${menu.name}</td>
+          <td>
+            <input type="number" class="quantity" value="${menu.quantity}">
+          </td>
+          <td>Rp <span>${menu.price}</span></td>
+        </tr>
+      `).join("")
+
+      subTotalDOM.innerHTML = subTotal
+      finalPriceDOM.innerHTML = (subTotal * ppn) + subTotal
+    }
+
+    const kirimKeBackend = () => {
+      const cashierName = document.getElementsByName("cashier")[0].value
+      const buyerName = document.getElementsByName("buyer")[0].value
+      const orderMenuV2 = orderMenu.map((menu) => ({
+        id: menu.id,
+        quantity: menu.quantity,
+      }));
+
+      const dataBuatBackend = {
+        "buyer": buyerName,
+        "cashier": cashierName,
+        "menu": orderMenuV2,
+      }
+
+      axios.post("http://localhost:3000/transactions", dataBuatBackend)
+        .then((response) => {
+          alert("PESANAN BERHASIL DIBIKIN")
+          subTotal = 0
+          total = 0
+          orderMenu = []
+          document.getElementsByName("buyer")[0].value = ""
+          document.querySelector("#table-menu-order tbody").innerHTML = ""
+          subTotalDOM.innerHTML = "0"
+          finalPriceDOM.innerHTML = "0"
+        })
+    }
+
     axios.get("http://localhost:3000/menu")
       .then((response) => {
         let dataMenu = response.data
@@ -64,13 +149,14 @@
               <div class="menu-item-title">${menu.name}</div>
             </div>
             <div class="menu-item-footer">
-              <button type="button" class="menu-item-add">
+              <button type="button" class="menu-item-add" onclick="addOrder(${menu.id}, '${menu.name}', ${menu.price})">
                 ${menu.price}
               </button>
             </div>
           </div>
         `).join("")
       });
+      
   </script>
 </body>
 </html>
