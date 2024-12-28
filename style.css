@@ -198,3 +198,85 @@ a {
   background: rgba(78, 203, 145, 0.12);
   border-color: #4ecb91;
 }
+
+
+.menu-container {
+  padding: 20px 20px;
+  position: relative;
+  height: 100%;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 8px 14px;
+  font-size: 1rem;
+  border-radius: 100px;
+  border: 2px solid #737373;
+}
+
+input[type="text"]:hover, input[type="text"]:active, input[type="text"]:focus {
+  border-color: #01b764 !important;
+}
+
+input[readonly] {
+  color: #737373;
+  cursor: not-allowed;
+}
+
+.mb-1 {
+  margin-bottom: 10px;
+}
+
+.mb-2 {
+  margin-bottom: 20px;
+}
+
+.mb-3 {
+  margin-bottom: 30px;
+}
+
+#form-order {
+  margin-top: 20px;
+}
+
+#order-button {
+  width: 100%;
+  border-radius: 100px;
+  border: 2px solid #01b764;
+  font-size: 1.2rem;
+  padding: 10px 20px;
+  background-color: #01b764;
+  color: #FFF;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#order-button:hover {
+  background-color: #FFF;
+  color: #01b764;
+}
+
+#form-order .form-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 20px;
+}
+
+.table-transactions {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.table-transactions tr td {
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
+.table-transactions tr td:last-child {
+  text-align: right;  
+}
+.table-transactions tr td.final-price {
+  padding-top: 10px;
+}
