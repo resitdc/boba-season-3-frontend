@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="axios.min.js"></script>
+  <title>Login</title>
+</head>
+<body>
+  
+  <form method="POST" id="form-login">
+    <input type="text" name="username" placeholder="Username">
+    <input type="password" name="password" placeholder="Pasword">
+    <button type="submit"> LOGIN </button>
+  </form>
+
+  <script>
+    document.getElementById("form-login").addEventListener("submit", (form) => {
+      form.preventDefault();
+      console.log("form ====>", form);
+      
+      const username = document.querySelector("#form-login input[name='username']").value
+      const password = document.querySelector("#form-login input[name='password']").value
+
+      const formData = {
+        username: username,
+        password: password,
+      };
+
+      axios.post("http://localhost:3000/login", formData)
+        .then((response) => {
+          if (response.data.message) { // kalo dia punya pesan artinya login gagal
+            alert(response.data.message) // kalian bisa ganti ini dengan pesan popup yang lebih canggih, sweet alert misalnya
+          } else { // ini kalo berhasil
+            // kalo berhasil kita simpen di local storage
+            localStorage.setItem("userLogin", JSON.stringify(response.data.dataUser))
+            window.location.href = "index.html" // redirect beres login, misal ke halaman index
+          }
+        })
+    })
+  </script>
+</body>
+</html>

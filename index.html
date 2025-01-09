@@ -34,7 +34,7 @@
     <div class="menu-container">
       <h2>Order Details</h2>
       <form action="" id="form-order">
-        <input type="text" class="mb-1" placeholder="Cashier Name" name="cashier" value="Restu" readonly>
+        <input type="text" class="mb-1" placeholder="Cashier Name" name="cashier" value="" readonly>
         <input type="text" class="mb-1" placeholder="Buyer Name" name="buyer">
         <div class="form-body">
           <table id="table-menu-order">
@@ -77,6 +77,12 @@
     </div>
   </div>
   <script>
+    const dataLogin = localStorage.getItem("userLogin") ? JSON.parse(localStorage.getItem("userLogin")) : {};
+
+    if (dataLogin.name) {
+      document.querySelector("input[type='text'][name='cashier']").value = dataLogin.name;
+    }
+
     let orderMenu = []
     const ppn = 0.1
     let subTotal = 0
